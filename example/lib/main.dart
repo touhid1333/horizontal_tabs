@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:horizontal_tabs/horizontal_tabs.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -114,8 +113,18 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            //HorizontalTabView.simple(a: 2),
-
+            HorizontalTabView.simple(
+              height: 70,
+              width: double.maxFinite,
+              backgroundColor: Colors.red,
+              unselectedBackgroundColor: Colors.grey,
+              foregroundColor: Colors.white,
+              unselectedForegroundColor: Colors.white,
+              selectedItem: 1,
+              itemTitles: ["a", "b", "c"],
+              itemAssetImagePath: ["", "", ""],
+              onTap: (p0) {},
+            ),
           ],
         ),
       ),

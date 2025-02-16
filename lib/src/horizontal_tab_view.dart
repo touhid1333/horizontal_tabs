@@ -40,7 +40,6 @@ class HorizontalTabView extends StatefulWidget {
       ).._type = _TabType.simple;
 
   factory HorizontalTabView.rounded({
-    required double width,
     required double height,
     required int selectedItem,
     required List<String> itemTitles,
@@ -52,7 +51,6 @@ class HorizontalTabView extends StatefulWidget {
     required Function(int) onTap,
   }) =>
       HorizontalTabView._internal(
-        width: width,
         height: height,
         selectedItem: selectedItem,
         itemTitles: itemTitles,
@@ -86,6 +84,29 @@ class HorizontalTabView extends StatefulWidget {
 class _HorizontalTabViewState extends State<HorizontalTabView> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox();
+    return widget._type == _TabType.simple
+        ? _HorizontalTabSimple(
+            width: widget.width!,
+            height: widget.height!,
+            selectedItem: widget.selectedItem!,
+            itemTitles: widget.itemTitles!,
+            itemAssetImagePath: widget.itemAssetImagePath!,
+            backgroundColor: widget.backgroundColor!,
+            unselectedBackgroundColor: widget.unselectedBackgroundColor!,
+            foregroundColor: widget.foregroundColor!,
+            unselectedForegroundColor: widget.unselectedForegroundColor!,
+            onTap: widget.onTap!)
+        : widget._type == _TabType.rounded
+            ? _HorizontalTabRounded(
+                height: widget.height!,
+                selectedItem: widget.selectedItem!,
+                itemTitles: widget.itemTitles!,
+                itemAssetImagePath: widget.itemAssetImagePath!,
+                backgroundColor: widget.backgroundColor!,
+                unselectedBackgroundColor: widget.unselectedBackgroundColor!,
+                foregroundColor: widget.foregroundColor!,
+                unselectedForegroundColor: widget.unselectedForegroundColor!,
+                onTap: widget.onTap!)
+            : const SizedBox();
   }
 }
