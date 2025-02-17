@@ -7,6 +7,7 @@ class HorizontalTabView extends StatefulWidget {
     this.selectedItem,
     this.itemTitles,
     this.itemAssetImagePath,
+    this.itemIcons,
     this.backgroundColor,
     this.unselectedBackgroundColor,
     this.foregroundColor,
@@ -14,12 +15,16 @@ class HorizontalTabView extends StatefulWidget {
     this.onTap,
   });
 
+  factory HorizontalTabView.basic() =>
+      HorizontalTabView._internal().._type = _TabType.basic;
+
   factory HorizontalTabView.simple({
     required double width,
     required double height,
     required int selectedItem,
     required List<String> itemTitles,
-    required List<String> itemAssetImagePath,
+    List<String>? itemAssetImagePath,
+    List<IconData>? itemIcons,
     required Color backgroundColor,
     required Color unselectedBackgroundColor,
     required Color foregroundColor,
@@ -32,6 +37,7 @@ class HorizontalTabView extends StatefulWidget {
         selectedItem: selectedItem,
         itemTitles: itemTitles,
         itemAssetImagePath: itemAssetImagePath,
+        itemIcons: itemIcons,
         backgroundColor: backgroundColor,
         unselectedBackgroundColor: unselectedBackgroundColor,
         foregroundColor: foregroundColor,
@@ -43,7 +49,8 @@ class HorizontalTabView extends StatefulWidget {
     required double height,
     required int selectedItem,
     required List<String> itemTitles,
-    required List<String> itemAssetImagePath,
+    List<String>? itemAssetImagePath,
+    List<IconData>? itemIcons,
     required Color backgroundColor,
     required Color unselectedBackgroundColor,
     required Color foregroundColor,
@@ -55,6 +62,7 @@ class HorizontalTabView extends StatefulWidget {
         selectedItem: selectedItem,
         itemTitles: itemTitles,
         itemAssetImagePath: itemAssetImagePath,
+        itemIcons: itemIcons,
         backgroundColor: backgroundColor,
         unselectedBackgroundColor: unselectedBackgroundColor,
         foregroundColor: foregroundColor,
@@ -62,8 +70,14 @@ class HorizontalTabView extends StatefulWidget {
         onTap: onTap,
       ).._type = _TabType.rounded;
 
-  factory HorizontalTabView.basic() =>
-      HorizontalTabView._internal().._type = _TabType.basic;
+  factory HorizontalTabView.box({
+    required Function(int) onTap,
+    required int selectedItem,
+  }) =>
+      HorizontalTabView._internal(
+        onTap: onTap,
+        selectedItem: selectedItem,
+      ).._type = _TabType.box;
 
   _TabType _type = _TabType.simple;
   final double? width;
@@ -71,6 +85,7 @@ class HorizontalTabView extends StatefulWidget {
   final int? selectedItem;
   final List<String>? itemTitles;
   final List<String>? itemAssetImagePath;
+  final List<IconData>? itemIcons;
   final Color? backgroundColor;
   final Color? unselectedBackgroundColor;
   final Color? foregroundColor;
@@ -90,7 +105,8 @@ class _HorizontalTabViewState extends State<HorizontalTabView> {
             height: widget.height!,
             selectedItem: widget.selectedItem!,
             itemTitles: widget.itemTitles!,
-            itemAssetImagePath: widget.itemAssetImagePath!,
+            itemAssetImagePath: widget.itemAssetImagePath,
+            itemIcons: widget.itemIcons,
             backgroundColor: widget.backgroundColor!,
             unselectedBackgroundColor: widget.unselectedBackgroundColor!,
             foregroundColor: widget.foregroundColor!,
@@ -101,12 +117,18 @@ class _HorizontalTabViewState extends State<HorizontalTabView> {
                 height: widget.height!,
                 selectedItem: widget.selectedItem!,
                 itemTitles: widget.itemTitles!,
-                itemAssetImagePath: widget.itemAssetImagePath!,
+                itemAssetImagePath: widget.itemAssetImagePath,
+                itemIcons: widget.itemIcons,
                 backgroundColor: widget.backgroundColor!,
                 unselectedBackgroundColor: widget.unselectedBackgroundColor!,
                 foregroundColor: widget.foregroundColor!,
                 unselectedForegroundColor: widget.unselectedForegroundColor!,
                 onTap: widget.onTap!)
-            : const SizedBox();
+            : widget._type == _TabType.box
+                ? _HorizontalTabBox(
+                    selectedItem: widget.selectedItem!,
+                    onTap: widget.onTap!,
+                  )
+                : const SizedBox();
   }
 }

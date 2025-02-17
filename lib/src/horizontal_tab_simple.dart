@@ -5,7 +5,8 @@ class _HorizontalTabSimple extends StatefulWidget {
   final double height;
   final int selectedItem;
   final List<String> itemTitles;
-  final List<String> itemAssetImagePath;
+  final List<String>? itemAssetImagePath;
+  final List<IconData>? itemIcons;
   final Color backgroundColor;
   final Color unselectedBackgroundColor;
   final Color foregroundColor;
@@ -17,7 +18,8 @@ class _HorizontalTabSimple extends StatefulWidget {
     required this.height,
     required this.selectedItem,
     required this.itemTitles,
-    required this.itemAssetImagePath,
+    this.itemAssetImagePath,
+    this.itemIcons,
     required this.backgroundColor,
     required this.unselectedBackgroundColor,
     required this.foregroundColor,
@@ -25,7 +27,10 @@ class _HorizontalTabSimple extends StatefulWidget {
     required this.onTap,
   })  : assert(height >= 70),
         assert(selectedItem >= 0 && selectedItem < itemTitles.length),
-        assert(itemTitles.length == itemAssetImagePath.length);
+        assert(itemAssetImagePath != null || itemIcons != null),
+        assert((itemAssetImagePath != null &&
+                itemTitles.length == itemAssetImagePath.length) ||
+            (itemIcons != null && itemTitles.length == itemIcons.length));
 
   @override
   State<_HorizontalTabSimple> createState() => _HorizontalTabSimpleState();
@@ -43,7 +48,8 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
           ? constraints.maxWidth / widget.itemTitles.length
           : widget.height;
       if (itemWidth < widget.height * 0.5) {
-        throw FlutterError("Item width can not be smaller than item height's 40 percent");
+        throw FlutterError(
+            "Item width can not be smaller than item height's 40 percent");
       }
 
       // -----------------------------------
@@ -72,15 +78,22 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
                     right: 0,
                     top: widget.height * 0.55,
                     child: Center(
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        curve:
+                            isSelected ? Curves.easeInCirc : Curves.easeOutCirc,
                         height: widget.height * 0.07,
                         decoration: BoxDecoration(
                           color: isSelected
                               ? widget.backgroundColor
                               : widget.unselectedBackgroundColor,
                           borderRadius: BorderRadius.horizontal(
-                            left: isFirstItem ? const Radius.circular(12) : Radius.zero,
-                            right: isLastItem ? const Radius.circular(12) : Radius.zero,
+                            left: isFirstItem
+                                ? const Radius.circular(12)
+                                : Radius.zero,
+                            right: isLastItem
+                                ? const Radius.circular(12)
+                                : Radius.zero,
                           ),
                         ),
                       ),
@@ -92,10 +105,14 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
                     left: 0,
                     right: 0,
                     child: Center(
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        curve:
+                            isSelected ? Curves.easeInCirc : Curves.easeOutCirc,
                         width: widget.height * 0.07,
-                        color:
-                        isSelected ? widget.backgroundColor : widget.unselectedBackgroundColor,
+                        color: isSelected
+                            ? widget.backgroundColor
+                            : widget.unselectedBackgroundColor,
                       ),
                     ),
                   ),
@@ -107,7 +124,10 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
                     right: 0,
                     bottom: 0,
                     child: Center(
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        curve:
+                            isSelected ? Curves.easeInCirc : Curves.easeOutCirc,
                         padding: EdgeInsets.all(widget.height * 0.07),
                         margin: const EdgeInsets.symmetric(horizontal: 2),
                         decoration: BoxDecoration(
@@ -137,22 +157,50 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
                     right: 0,
                     top: 0,
                     child: Center(
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        curve:
+                            isSelected ? Curves.easeInCirc : Curves.easeOutCirc,
                         padding: EdgeInsets.all(widget.height * 0.07),
                         decoration: BoxDecoration(
                           color: isSelected
                               ? widget.backgroundColor
                               : widget.unselectedBackgroundColor,
-                          borderRadius: BorderRadius.circular(widget.height * 0.48),
+                          borderRadius:
+                              BorderRadius.circular(widget.height * 0.48),
                         ),
-                        child: Image.asset(
-                          widget.itemAssetImagePath[i],
-                          height: widget.height * .34,
-                          width: widget.height * .34,
-                          color: isSelected
-                              ? widget.foregroundColor
-                              : widget.unselectedForegroundColor,
-                        ),
+                        child:
+                            // -----------------------------------
+                            // Asset Image
+                            // -----------------------------------
+                            widget.itemAssetImagePath != null
+                                ? Image.asset(
+                                    widget.itemAssetImagePath![i],
+                                    height: widget.height * .34,
+                                    width: widget.height * .34,
+                                    color: isSelected
+                                        ? widget.foregroundColor
+                                        : widget.unselectedForegroundColor,
+                                  )
+                                :
+                                // -----------------------------------
+                                // Icons
+                                // -----------------------------------
+                                widget.itemIcons != null
+                                    ? Icon(
+                                        widget.itemIcons![i],
+                                        size: widget.height * .34,
+                                        color: isSelected
+                                            ? widget.foregroundColor
+                                            : widget.unselectedForegroundColor,
+                                      )
+                                    : Icon(
+                                        Icons.all_out_outlined,
+                                        size: widget.height * .34,
+                                        color: isSelected
+                                            ? widget.foregroundColor
+                                            : widget.unselectedForegroundColor,
+                                      ),
                       ),
                     ),
                   ),

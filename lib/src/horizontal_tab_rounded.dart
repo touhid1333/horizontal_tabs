@@ -4,7 +4,8 @@ class _HorizontalTabRounded extends StatefulWidget {
   final double height;
   final int selectedItem;
   final List<String> itemTitles;
-  final List<String> itemAssetImagePath;
+  final List<String>? itemAssetImagePath;
+  final List<IconData>? itemIcons;
   final Color backgroundColor;
   final Color unselectedBackgroundColor;
   final Color foregroundColor;
@@ -15,13 +16,19 @@ class _HorizontalTabRounded extends StatefulWidget {
     required this.height,
     required this.selectedItem,
     required this.itemTitles,
-    required this.itemAssetImagePath,
+    this.itemAssetImagePath,
+    this.itemIcons,
     required this.backgroundColor,
     required this.unselectedBackgroundColor,
     required this.foregroundColor,
     required this.unselectedForegroundColor,
     required this.onTap,
-  });
+  })  : assert(height >= 70),
+        assert(selectedItem >= 0 && selectedItem < itemTitles.length),
+        assert(itemAssetImagePath != null || itemIcons != null),
+        assert((itemAssetImagePath != null &&
+                itemTitles.length == itemAssetImagePath.length) ||
+            (itemIcons != null && itemTitles.length == itemIcons.length));
 
   @override
   State<_HorizontalTabRounded> createState() => _HorizontalTabRoundedState();
@@ -163,14 +170,40 @@ class _HorizontalTabRoundedState extends State<_HorizontalTabRounded> {
                               BorderRadius.circular(widget.height * 0.48),
                         ),
                         child: Center(
-                          child: Image.asset(
-                            widget.itemAssetImagePath[i],
-                            height: widget.height * .34,
-                            width: widget.height * .34,
-                            color: isSelected
-                                ? widget.foregroundColor
-                                : widget.unselectedForegroundColor,
-                          ),
+                          child:
+                              // -----------------------------------
+                              // Asset Image
+                              // -----------------------------------
+                              widget.itemAssetImagePath != null
+                                  ? Image.asset(
+                                      widget.itemAssetImagePath![i],
+                                      height: widget.height * .34,
+                                      width: widget.height * .34,
+                                      color: isSelected
+                                          ? widget.foregroundColor
+                                          : widget.unselectedForegroundColor,
+                                    )
+                                  :
+                                  // -----------------------------------
+                                  // Icons
+                                  // -----------------------------------
+                                  widget.itemIcons != null
+                                      ? Icon(
+                                          widget.itemIcons![i],
+                                          size: widget.height * .34,
+                                          color: isSelected
+                                              ? widget.foregroundColor
+                                              : widget
+                                                  .unselectedForegroundColor,
+                                        )
+                                      : Icon(
+                                          Icons.all_out_outlined,
+                                          size: widget.height * .34,
+                                          color: isSelected
+                                              ? widget.foregroundColor
+                                              : widget
+                                                  .unselectedForegroundColor,
+                                        ),
                         ),
                       ),
                     ),
