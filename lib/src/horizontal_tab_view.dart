@@ -4,6 +4,7 @@ class HorizontalTabView extends StatefulWidget {
   HorizontalTabView._internal({
     this.width,
     this.height,
+    this.strokeHeight,
     this.selectedItem,
     this.itemTitles,
     this.itemAssetImagePath,
@@ -71,17 +72,34 @@ class HorizontalTabView extends StatefulWidget {
       ).._type = _TabType.rounded;
 
   factory HorizontalTabView.box({
-    required Function(int) onTap,
+    required double width,
+    required double height,
+    required double strokeHeight,
     required int selectedItem,
+    required List<String> itemTitles,
+    List<String>? itemAssetImagePath,
+    List<IconData>? itemIcons,
+    required Color foregroundColor,
+    required Color unselectedForegroundColor,
+    required Function(int) onTap,
   }) =>
       HorizontalTabView._internal(
-        onTap: onTap,
+        width: width,
+        height: height,
+        strokeHeight: strokeHeight,
         selectedItem: selectedItem,
+        itemTitles: itemTitles,
+        itemAssetImagePath: itemAssetImagePath,
+        itemIcons: itemIcons,
+        foregroundColor: foregroundColor,
+        unselectedForegroundColor: unselectedForegroundColor,
+        onTap: onTap,
       ).._type = _TabType.box;
 
   _TabType _type = _TabType.simple;
   final double? width;
   final double? height;
+  final double? strokeHeight;
   final int? selectedItem;
   final List<String>? itemTitles;
   final List<String>? itemAssetImagePath;
@@ -126,7 +144,16 @@ class _HorizontalTabViewState extends State<HorizontalTabView> {
                 onTap: widget.onTap!)
             : widget._type == _TabType.box
                 ? _HorizontalTabBox(
+                    width: widget.width!,
+                    height: widget.height!,
+                    strokeHeight: widget.strokeHeight!,
                     selectedItem: widget.selectedItem!,
+                    itemTitles: widget.itemTitles!,
+                    itemAssetImagePath: widget.itemAssetImagePath,
+                    itemIcons: widget.itemIcons,
+                    foregroundColor: widget.foregroundColor!,
+                    unselectedForegroundColor:
+                        widget.unselectedForegroundColor!,
                     onTap: widget.onTap!,
                   )
                 : const SizedBox();

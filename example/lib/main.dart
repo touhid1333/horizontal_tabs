@@ -63,12 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 foregroundColor: Colors.white,
                 unselectedForegroundColor: Colors.white,
                 selectedItem: _index,
-                itemTitles: const ["Home", "Orders", "Cart", "Profile"],
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
                 itemIcons: const [
                   Icons.home,
                   Icons.bookmark_border,
                   Icons.shopping_cart,
-                  Icons.person
+                  Icons.person,
+                  Icons.more_horiz,
                 ],
                 onTap: (p0) {
                   setState(() {
@@ -88,18 +89,19 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: HorizontalTabView.rounded(
-                height: 90,
+                height: 70,
                 backgroundColor: Colors.green,
                 unselectedBackgroundColor: Colors.grey,
                 foregroundColor: Colors.white,
                 unselectedForegroundColor: Colors.white,
                 selectedItem: _index,
-                itemTitles: const ["Home", "Orders", "Cart", "Profile"],
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
                 itemIcons: const [
                   Icons.home,
                   Icons.bookmark_border,
                   Icons.shopping_cart,
-                  Icons.person
+                  Icons.person,
+                  Icons.more_horiz,
                 ],
                 onTap: (p0) {
                   setState(() {
@@ -119,7 +121,20 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: HorizontalTabView.box(
+                height: 60,
+                width: double.maxFinite,
+                strokeHeight: 5,
+                foregroundColor: Colors.green,
+                unselectedForegroundColor: Colors.grey,
                 selectedItem: _index,
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
+                itemIcons: const [
+                  Icons.home,
+                  Icons.bookmark_border,
+                  Icons.shopping_cart,
+                  Icons.person,
+                  Icons.more_horiz,
+                ],
                 onTap: (p0) {
                   setState(() {
                     _index = p0;

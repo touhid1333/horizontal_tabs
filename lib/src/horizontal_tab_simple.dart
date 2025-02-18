@@ -61,9 +61,7 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: widget.itemTitles.length,
-          itemExtent: widget.itemTitles.length <= 4
-              ? constraints.maxWidth / widget.itemTitles.length
-              : widget.height,
+          itemExtent: itemWidth,
           itemBuilder: (context, i) {
             bool isSelected = widget.selectedItem == i;
             bool isFirstItem = i == 0;

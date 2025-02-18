@@ -1,10 +1,34 @@
 part of '../horizontal_tabs.dart';
 
 class _HorizontalTabBox extends StatefulWidget {
+  final double width;
+  final double height;
+  final double strokeHeight;
   final int selectedItem;
+  final List<String> itemTitles;
+  final List<String>? itemAssetImagePath;
+  final List<IconData>? itemIcons;
+  final Color foregroundColor;
+  final Color unselectedForegroundColor;
   final Function(int) onTap;
 
-  const _HorizontalTabBox({required this.selectedItem, required this.onTap});
+  const _HorizontalTabBox(
+      {required this.selectedItem,
+      required this.onTap,
+      required this.width,
+      required this.height,
+      required this.strokeHeight,
+      required this.itemTitles,
+      this.itemAssetImagePath,
+      this.itemIcons,
+      required this.foregroundColor,
+      required this.unselectedForegroundColor})
+      : assert(height >= 60),
+        assert(selectedItem >= 0 && selectedItem < itemTitles.length),
+        assert(itemAssetImagePath != null || itemIcons != null),
+        assert((itemAssetImagePath != null &&
+                itemTitles.length == itemAssetImagePath.length) ||
+            (itemIcons != null && itemTitles.length == itemIcons.length));
 
   @override
   State<_HorizontalTabBox> createState() => _HorizontalTabBoxState();
@@ -13,45 +37,66 @@ class _HorizontalTabBox extends StatefulWidget {
 class _HorizontalTabBoxState extends State<_HorizontalTabBox> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      height: 50,
-      child: LayoutBuilder(builder: (context, constraints) {
-        double itemWidth = (constraints.maxWidth - (4 * 5)) / 5;
-        return Stack(
-          children: [
-            SizedBox(
-              height: 50,
-              child: ListView.builder(
-                itemCount: 5,
+    return LayoutBuilder(builder: (context, constraints) {
+      double itemWidth = widget.itemTitles.length <= 5
+          ? (constraints.maxWidth - ((widget.itemTitles.length - 1) * 5)) /
+              widget.itemTitles.length
+          : widget.height;
+      double totalWidth = widget.itemTitles.length <= 5
+          ? constraints.maxWidth
+          : (itemWidth * widget.itemTitles.length) +
+              ((widget.itemTitles.length - 1) * 5);
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SizedBox(
+          width: totalWidth,
+          height: widget.height,
+          child: Stack(
+            children: [
+              // -----------------------------------
+              // All Tabs
+              // -----------------------------------
+              ListView.builder(
+                itemCount: widget.itemTitles.length,
+                physics: const NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
+                  bool isSelected = widget.selectedItem == index;
+                  bool isLastItem = (index == (widget.itemTitles.length - 1));
                   return Stack(
                     children: [
-                      Container(
-                        height: 50,
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 400),
+                        curve:
+                            isSelected ? Curves.slowMiddle : Curves.slowMiddle,
+                        height: widget.height,
                         width: itemWidth,
                         margin: EdgeInsets.only(
-                          right: index != (5 - 1) ? 5 : 0,
-                          top: index != widget.selectedItem ? 10 : 0,
+                          right: isLastItem ? 0 : 5,
+                          top: isSelected ? 0 : 10,
                         ),
                         decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(4),
-                              topRight: Radius.circular(4)),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.elliptical(
+                                  isSelected ? 10 : 2, isSelected ? 10 : 2),
+                              topRight: Radius.elliptical(
+                                  isSelected ? 10 : 2, isSelected ? 10 : 2)),
                           border: Border(
                             left: BorderSide(
-                                color: index == widget.selectedItem
-                                    ? Colors.green
-                                    : Colors.grey),
+                              color: isSelected
+                                  ? widget.foregroundColor
+                                  : widget.unselectedForegroundColor,
+                            ),
                             right: BorderSide(
-                                color: index == widget.selectedItem
-                                    ? Colors.green
-                                    : Colors.grey),
+                              color: isSelected
+                                  ? widget.foregroundColor
+                                  : widget.unselectedForegroundColor,
+                            ),
                             top: BorderSide(
-                                color: index == widget.selectedItem
-                                    ? Colors.green
-                                    : Colors.grey),
+                              color: isSelected
+                                  ? widget.foregroundColor
+                                  : widget.unselectedForegroundColor,
+                            ),
                             bottom: BorderSide.none,
                           ),
                         ),
@@ -59,15 +104,49 @@ class _HorizontalTabBoxState extends State<_HorizontalTabBox> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text("Test"),
-                              if (index == widget.selectedItem)
-                                Container(
-                                  height: 4,
-                                  width: 4,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: Colors.green),
-                                )
+                              // -----------------------------------
+                              // Asset Image
+                              // -----------------------------------
+                              widget.itemAssetImagePath != null
+                                  ? Image.asset(
+                                      widget.itemAssetImagePath![index],
+                                      height: widget.height * .34,
+                                      width: widget.height * .34,
+                                      color: isSelected
+                                          ? widget.foregroundColor
+                                          : widget.unselectedForegroundColor,
+                                    )
+                                  :
+                                  // -----------------------------------
+                                  // Icons
+                                  // -----------------------------------
+                                  widget.itemIcons != null
+                                      ? Icon(
+                                          widget.itemIcons![index],
+                                          size: widget.height * .34,
+                                          color: isSelected
+                                              ? widget.foregroundColor
+                                              : widget
+                                                  .unselectedForegroundColor,
+                                        )
+                                      : Icon(
+                                          Icons.all_out_outlined,
+                                          size: widget.height * .34,
+                                          color: isSelected
+                                              ? widget.foregroundColor
+                                              : widget
+                                                  .unselectedForegroundColor,
+                                        ),
+
+                              if (isSelected)
+                                Text(
+                                  widget.itemTitles[index],
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: widget.foregroundColor,
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -86,26 +165,27 @@ class _HorizontalTabBoxState extends State<_HorizontalTabBox> {
                   );
                 },
               ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: CustomPaint(
-                painter: _CutLinePainter(
-                    color: Colors.green,
-                    totalWidth: constraints.maxWidth,
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: CustomPaint(
+                  painter: _CutLinePainter(
+                    color: widget.foregroundColor,
+                    totalWidth: totalWidth,
                     itemWidth: itemWidth,
                     spacing: 5,
                     currentIndex: widget.selectedItem,
-                    strokeWidth: 2),
-                size: Size(constraints.maxWidth, 0),
+                    strokeWidth: widget.strokeHeight,
+                  ),
+                  size: Size(totalWidth, 0),
+                ),
               ),
-            ),
-          ],
-        );
-      }),
-    );
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -144,5 +224,55 @@ class _CutLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
+
+Color darkenColor(Color color, double shadeFactor) {
+  return Color.fromRGBO(
+    (color.red * (1 - shadeFactor)).round(),
+    (color.green * (1 - shadeFactor)).round(),
+    (color.blue * (1 - shadeFactor)).round(),
+    color.opacity,
+  );
+}
+
+Color lightenColor(Color color, double tintFactor) {
+  return Color.fromRGBO(
+    (color.red + (255 - color.red) * tintFactor).round(),
+    (color.green + (255 - color.green) * tintFactor).round(),
+    (color.blue + (255 - color.blue) * tintFactor).round(),
+    color.opacity,
+  );
+}
+
+/*boxShadow: isTap
+? []
+: (!widget.inset
+? [
+BoxShadow(
+color: darkenColor(widget.boxShadowColor, 0.3),
+offset: const Offset(5, 5),
+blurRadius: 10,
+spreadRadius: 1,
+),
+BoxShadow(
+color: lightenColor(widget.boxShadowColor, 0.25),
+offset: const Offset(-5, -5),
+blurRadius: 10,
+spreadRadius: 1,
+),
+]
+    : [
+BoxShadow(
+color: darkenColor(widget.boxShadowColor, 0.3),
+offset: const Offset(-5, -5),
+blurRadius: 10,
+spreadRadius: 1,
+),
+BoxShadow(
+color: lightenColor(widget.boxShadowColor, 0.25),
+offset: const Offset(5, 5),
+blurRadius: 10,
+spreadRadius: 1,
+),
+])),*/
