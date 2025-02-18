@@ -1,0 +1,1 @@
+part of '../horizontal_tabs.dart';

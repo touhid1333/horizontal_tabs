@@ -19,4 +19,6 @@ part 'src/horizontal_tab_rounded.dart';
 
 part 'src/horizontal_tab_box.dart';
 
+part 'src/horizontal_tab_connected.dart';
+
 part 'src/tab_type.dart';

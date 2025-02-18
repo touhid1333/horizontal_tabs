@@ -4,5 +4,6 @@ enum _TabType {
   basic,
   simple,
   rounded,
-  box;
+  box,
+  connected;
 }
