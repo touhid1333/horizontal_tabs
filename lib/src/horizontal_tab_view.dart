@@ -14,6 +14,7 @@ class HorizontalTabView extends StatefulWidget {
     this.foregroundColor,
     this.unselectedForegroundColor,
     this.onTap,
+    this.barColor,
   });
 
   factory HorizontalTabView.basic() =>
@@ -96,6 +97,35 @@ class HorizontalTabView extends StatefulWidget {
         onTap: onTap,
       ).._type = _TabType.box;
 
+  factory HorizontalTabView.connected({
+    required double width,
+    required double height,
+    required double strokeHeight,
+    required int selectedItem,
+    required List<String> itemTitles,
+    List<String>? itemAssetImagePath,
+    List<IconData>? itemIcons,
+    required final Color barColor,
+    required final Color backgroundColor,
+    required Color foregroundColor,
+    required Color unselectedForegroundColor,
+    required Function(int) onTap,
+  }) =>
+      HorizontalTabView._internal(
+        width: width,
+        height: height,
+        strokeHeight: strokeHeight,
+        selectedItem: selectedItem,
+        itemTitles: itemTitles,
+        itemAssetImagePath: itemAssetImagePath,
+        itemIcons: itemIcons,
+        barColor: barColor,
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        unselectedForegroundColor: unselectedForegroundColor,
+        onTap: onTap,
+      ).._type = _TabType.connected;
+
   _TabType _type = _TabType.simple;
   final double? width;
   final double? height;
@@ -104,6 +134,7 @@ class HorizontalTabView extends StatefulWidget {
   final List<String>? itemTitles;
   final List<String>? itemAssetImagePath;
   final List<IconData>? itemIcons;
+  final Color? barColor;
   final Color? backgroundColor;
   final Color? unselectedBackgroundColor;
   final Color? foregroundColor;
@@ -156,6 +187,22 @@ class _HorizontalTabViewState extends State<HorizontalTabView> {
                         widget.unselectedForegroundColor!,
                     onTap: widget.onTap!,
                   )
-                : const SizedBox();
+                : widget._type == _TabType.connected
+                    ? _HorizontalTabConnected(
+                        width: widget.width!,
+                        height: widget.height!,
+                        strokeHeight: widget.strokeHeight!,
+                        selectedItem: widget.selectedItem!,
+                        itemTitles: widget.itemTitles!,
+                        itemAssetImagePath: widget.itemAssetImagePath,
+                        itemIcons: widget.itemIcons,
+                        barColor: widget.barColor!,
+                        backgroundColor: widget.backgroundColor!,
+                        foregroundColor: widget.foregroundColor!,
+                        unselectedForegroundColor:
+                            widget.unselectedForegroundColor!,
+                        onTap: widget.onTap!,
+                      )
+                    : const SizedBox();
   }
 }

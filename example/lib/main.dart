@@ -49,6 +49,40 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Text(
+                "Connected Horizontal Tabs :",
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: HorizontalTabView.connected(
+                height: 60,
+                width: double.maxFinite,
+                strokeHeight: 16,
+                barColor: Colors.deepPurple,
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.deepPurple,
+                unselectedForegroundColor: Colors.grey,
+                selectedItem: _index,
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
+                itemIcons: const [
+                  Icons.home,
+                  Icons.bookmark_border,
+                  Icons.shopping_cart,
+                  Icons.person,
+                  Icons.more_horiz,
+                ],
+                onTap: (p0) {
+                  setState(() {
+                    _index = p0;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Text(
                 "Simple Horizontal Tabs :",
                 style: Theme.of(context).textTheme.titleSmall,
               ),
@@ -58,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: HorizontalTabView.simple(
                 height: 70,
                 width: double.maxFinite,
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.deepPurple,
                 unselectedBackgroundColor: Colors.grey,
                 foregroundColor: Colors.white,
                 unselectedForegroundColor: Colors.white,
@@ -90,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: HorizontalTabView.rounded(
                 height: 70,
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.deepPurple,
                 unselectedBackgroundColor: Colors.grey,
                 foregroundColor: Colors.white,
                 unselectedForegroundColor: Colors.white,
@@ -124,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 60,
                 width: double.maxFinite,
                 strokeHeight: 5,
-                foregroundColor: Colors.green,
+                foregroundColor: Colors.deepPurple,
                 unselectedForegroundColor: Colors.grey,
                 selectedItem: _index,
                 itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
@@ -142,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),
