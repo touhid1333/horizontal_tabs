@@ -56,20 +56,21 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: HorizontalTabView.connected(
-                height: 60,
+                height: 50,
                 width: double.maxFinite,
                 strokeHeight: 16,
                 barColor: Colors.deepPurple,
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.deepPurple,
-                unselectedForegroundColor: Colors.grey,
+                unselectedForegroundColor: Colors.grey.withOpacity(.6),
                 selectedItem: _index,
-                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More", "One More"],
                 itemIcons: const [
                   Icons.home,
                   Icons.bookmark_border,
                   Icons.shopping_cart,
                   Icons.person,
+                  Icons.more_horiz,
                   Icons.more_horiz,
                 ],
                 onTap: (p0) {
@@ -93,16 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 70,
                 width: double.maxFinite,
                 backgroundColor: Colors.deepPurple,
-                unselectedBackgroundColor: Colors.grey,
+                unselectedBackgroundColor: Colors.grey.withOpacity(.6),
                 foregroundColor: Colors.white,
                 unselectedForegroundColor: Colors.white,
                 selectedItem: _index,
-                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More", "One More"],
                 itemIcons: const [
                   Icons.home,
                   Icons.bookmark_border,
                   Icons.shopping_cart,
                   Icons.person,
+                  Icons.more_horiz,
                   Icons.more_horiz,
                 ],
                 onTap: (p0) {
@@ -125,16 +127,17 @@ class _MyHomePageState extends State<MyHomePage> {
               child: HorizontalTabView.rounded(
                 height: 70,
                 backgroundColor: Colors.deepPurple,
-                unselectedBackgroundColor: Colors.grey,
+                unselectedBackgroundColor: Colors.grey.withOpacity(.6),
                 foregroundColor: Colors.white,
                 unselectedForegroundColor: Colors.white,
                 selectedItem: _index,
-                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More"],
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More", "One More"],
                 itemIcons: const [
                   Icons.home,
                   Icons.bookmark_border,
                   Icons.shopping_cart,
                   Icons.person,
+                  Icons.more_horiz,
                   Icons.more_horiz,
                 ],
                 onTap: (p0) {
@@ -155,7 +158,41 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: HorizontalTabView.box(
-                height: 60,
+                height: 50,
+                width: double.maxFinite,
+                strokeHeight: 5,
+                foregroundColor: Colors.deepPurple,
+                unselectedForegroundColor: Colors.grey.withOpacity(.6),
+                selectedItem: _index,
+                itemTitles: const ["Home", "Orders", "Cart", "Profile", "More", "One More"],
+                itemIcons: const [
+                  Icons.home,
+                  Icons.bookmark_border,
+                  Icons.shopping_cart,
+                  Icons.person,
+                  Icons.more_horiz,
+                  Icons.more_horiz,
+                ],
+                onTap: (p0) {
+                  setState(() {
+                    _index = p0;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Text(
+                "Basic Horizontal Tabs :",
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: HorizontalTabView.basic(
+                  /*height: 60,
                 width: double.maxFinite,
                 strokeHeight: 5,
                 foregroundColor: Colors.deepPurple,
@@ -173,8 +210,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     _index = p0;
                   });
-                },
-              ),
+                },*/
+                  ),
             ),
             const SizedBox(height: 10),
           ],

@@ -146,23 +146,46 @@ class HorizontalTabView extends StatefulWidget {
 }
 
 class _HorizontalTabViewState extends State<HorizontalTabView> {
+  List<GlobalKey>? _globalKeysForItems;
+
+  void _initializeGlobalItemKeys() {
+    if (widget.itemTitles != null) {
+      int count = 0;
+      _globalKeysForItems = [];
+      while (count < widget.itemTitles!.length) {
+        _globalKeysForItems!.add(GlobalKey());
+        count++;
+      }
+    }
+  }
+
+  void _handleOnTap(index) async {
+    // ensure tap visible position
+    if (_globalKeysForItems?[index].currentContext != null) {
+      await Scrollable.ensureVisible(
+        _globalKeysForItems![index].currentContext!,
+        alignment: 0.5,
+        curve: Curves.ease,
+        duration: const Duration(milliseconds: 200),
+      );
+    }
+    // user tap logic here
+    widget.onTap!(index);
+  }
+
+  @override
+  void initState() {
+    _initializeGlobalItemKeys();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget._type == _TabType.simple
-        ? _HorizontalTabSimple(
-            width: widget.width!,
-            height: widget.height!,
-            selectedItem: widget.selectedItem!,
-            itemTitles: widget.itemTitles!,
-            itemAssetImagePath: widget.itemAssetImagePath,
-            itemIcons: widget.itemIcons,
-            backgroundColor: widget.backgroundColor!,
-            unselectedBackgroundColor: widget.unselectedBackgroundColor!,
-            foregroundColor: widget.foregroundColor!,
-            unselectedForegroundColor: widget.unselectedForegroundColor!,
-            onTap: widget.onTap!)
-        : widget._type == _TabType.rounded
-            ? _HorizontalTabRounded(
+    return _globalKeysForItems != null
+        ? widget._type == _TabType.simple
+            ? _HorizontalTabSimple(
+                keys: _globalKeysForItems!,
+                width: widget.width!,
                 height: widget.height!,
                 selectedItem: widget.selectedItem!,
                 itemTitles: widget.itemTitles!,
@@ -172,23 +195,25 @@ class _HorizontalTabViewState extends State<HorizontalTabView> {
                 unselectedBackgroundColor: widget.unselectedBackgroundColor!,
                 foregroundColor: widget.foregroundColor!,
                 unselectedForegroundColor: widget.unselectedForegroundColor!,
-                onTap: widget.onTap!)
-            : widget._type == _TabType.box
-                ? _HorizontalTabBox(
-                    width: widget.width!,
+                onTap: _handleOnTap)
+            : widget._type == _TabType.rounded
+                ? _HorizontalTabRounded(
+                    keys: _globalKeysForItems!,
                     height: widget.height!,
-                    strokeHeight: widget.strokeHeight!,
                     selectedItem: widget.selectedItem!,
                     itemTitles: widget.itemTitles!,
                     itemAssetImagePath: widget.itemAssetImagePath,
                     itemIcons: widget.itemIcons,
+                    backgroundColor: widget.backgroundColor!,
+                    unselectedBackgroundColor:
+                        widget.unselectedBackgroundColor!,
                     foregroundColor: widget.foregroundColor!,
                     unselectedForegroundColor:
                         widget.unselectedForegroundColor!,
-                    onTap: widget.onTap!,
-                  )
-                : widget._type == _TabType.connected
-                    ? _HorizontalTabConnected(
+                    onTap: _handleOnTap)
+                : widget._type == _TabType.box
+                    ? _HorizontalTabBox(
+                        keys: _globalKeysForItems!,
                         width: widget.width!,
                         height: widget.height!,
                         strokeHeight: widget.strokeHeight!,
@@ -196,13 +221,33 @@ class _HorizontalTabViewState extends State<HorizontalTabView> {
                         itemTitles: widget.itemTitles!,
                         itemAssetImagePath: widget.itemAssetImagePath,
                         itemIcons: widget.itemIcons,
-                        barColor: widget.barColor!,
-                        backgroundColor: widget.backgroundColor!,
                         foregroundColor: widget.foregroundColor!,
                         unselectedForegroundColor:
                             widget.unselectedForegroundColor!,
-                        onTap: widget.onTap!,
+                        onTap: _handleOnTap,
                       )
-                    : const SizedBox();
+                    : widget._type == _TabType.connected
+                        ? _HorizontalTabConnected(
+                            keys: _globalKeysForItems!,
+                            width: widget.width!,
+                            height: widget.height!,
+                            strokeHeight: widget.strokeHeight!,
+                            selectedItem: widget.selectedItem!,
+                            itemTitles: widget.itemTitles!,
+                            itemAssetImagePath: widget.itemAssetImagePath,
+                            itemIcons: widget.itemIcons,
+                            barColor: widget.barColor!,
+                            backgroundColor: widget.backgroundColor!,
+                            foregroundColor: widget.foregroundColor!,
+                            unselectedForegroundColor:
+                                widget.unselectedForegroundColor!,
+                            onTap: _handleOnTap,
+                          )
+                        : widget._type == _TabType.basic
+                            ? _HorizontalTabBasic(
+                                keys: _globalKeysForItems!,
+                              )
+                            : const SizedBox()
+        : const SizedBox();
   }
 }

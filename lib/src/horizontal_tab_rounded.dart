@@ -1,6 +1,7 @@
 part of '../horizontal_tabs.dart';
 
 class _HorizontalTabRounded extends StatefulWidget {
+  final List<GlobalKey> keys;
   final double height;
   final int selectedItem;
   final List<String> itemTitles;
@@ -23,6 +24,7 @@ class _HorizontalTabRounded extends StatefulWidget {
     required this.foregroundColor,
     required this.unselectedForegroundColor,
     required this.onTap,
+    required this.keys,
   })  : assert(height >= 70),
         assert(selectedItem >= 0 && selectedItem < itemTitles.length),
         assert(itemAssetImagePath != null || itemIcons != null),
@@ -69,6 +71,7 @@ class _HorizontalTabRoundedState extends State<_HorizontalTabRounded> {
               bool isFirstItem = i == 0;
               bool isLastItem = (i == (widget.itemTitles.length - 1));
               return Stack(
+                key: widget.keys[i],
                 children: [
                   // -----------------------------------
                   // Arch

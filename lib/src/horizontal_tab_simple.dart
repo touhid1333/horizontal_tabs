@@ -1,6 +1,7 @@
 part of '../horizontal_tabs.dart';
 
 class _HorizontalTabSimple extends StatefulWidget {
+  final List<GlobalKey> keys;
   final double width;
   final double height;
   final int selectedItem;
@@ -25,6 +26,7 @@ class _HorizontalTabSimple extends StatefulWidget {
     required this.foregroundColor,
     required this.unselectedForegroundColor,
     required this.onTap,
+    required this.keys,
   })  : assert(height >= 70),
         assert(selectedItem >= 0 && selectedItem < itemTitles.length),
         assert(itemAssetImagePath != null || itemIcons != null),
@@ -67,6 +69,7 @@ class _HorizontalTabSimpleState extends State<_HorizontalTabSimple> {
             bool isFirstItem = i == 0;
             bool isLastItem = (i == (widget.itemTitles.length - 1));
             return SizedBox(
+              key: widget.keys[i],
               height: widget.height,
               width: double.maxFinite,
               child: Stack(

@@ -13,21 +13,23 @@ class _HorizontalTabConnected extends StatefulWidget {
   final Color foregroundColor;
   final Color unselectedForegroundColor;
   final Function(int) onTap;
+  final List<GlobalKey> keys;
 
-  const _HorizontalTabConnected(
-      {required this.width,
-      required this.height,
-      required this.strokeHeight,
-      required this.selectedItem,
-      required this.itemTitles,
-      this.itemAssetImagePath,
-      this.itemIcons,
-      required this.foregroundColor,
-      required this.unselectedForegroundColor,
-      required this.onTap,
-      required this.barColor,
-      required this.backgroundColor})
-      : assert(height >= 60),
+  const _HorizontalTabConnected({
+    required this.width,
+    required this.height,
+    required this.strokeHeight,
+    required this.selectedItem,
+    required this.itemTitles,
+    this.itemAssetImagePath,
+    this.itemIcons,
+    required this.foregroundColor,
+    required this.unselectedForegroundColor,
+    required this.onTap,
+    required this.barColor,
+    required this.backgroundColor,
+    required this.keys,
+  })  : assert(height >= 50),
         assert(strokeHeight >= 15),
         assert(selectedItem >= 0 && selectedItem < itemTitles.length),
         assert(itemAssetImagePath != null || itemIcons != null),
@@ -90,6 +92,7 @@ class _HorizontalTabConnectedState extends State<_HorizontalTabConnected> {
                 itemBuilder: (context, index) {
                   bool isSelected = widget.selectedItem == index;
                   return Container(
+                    key: widget.keys[index],
                     margin: widget.itemTitles.length <= 5
                         ? null
                         : EdgeInsets.only(
@@ -189,8 +192,10 @@ class _HorizontalTabConnectedState extends State<_HorizontalTabConnected> {
                                   if (isSelected)
                                     Text(
                                       widget.itemTitles[index],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 9,
+                                        fontSize: 6,
                                         fontWeight: FontWeight.bold,
                                         color: widget.foregroundColor,
                                       ),

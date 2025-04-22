@@ -1,6 +1,7 @@
 part of '../horizontal_tabs.dart';
 
 class _HorizontalTabBox extends StatefulWidget {
+  final List<GlobalKey> keys;
   final double width;
   final double height;
   final double strokeHeight;
@@ -12,18 +13,19 @@ class _HorizontalTabBox extends StatefulWidget {
   final Color unselectedForegroundColor;
   final Function(int) onTap;
 
-  const _HorizontalTabBox(
-      {required this.selectedItem,
-      required this.onTap,
-      required this.width,
-      required this.height,
-      required this.strokeHeight,
-      required this.itemTitles,
-      this.itemAssetImagePath,
-      this.itemIcons,
-      required this.foregroundColor,
-      required this.unselectedForegroundColor})
-      : assert(height >= 60),
+  const _HorizontalTabBox({
+    required this.selectedItem,
+    required this.onTap,
+    required this.width,
+    required this.height,
+    required this.strokeHeight,
+    required this.itemTitles,
+    this.itemAssetImagePath,
+    this.itemIcons,
+    required this.foregroundColor,
+    required this.unselectedForegroundColor,
+    required this.keys,
+  })  : assert(height >= 50),
         assert(selectedItem >= 0 && selectedItem < itemTitles.length),
         assert(itemAssetImagePath != null || itemIcons != null),
         assert((itemAssetImagePath != null &&
@@ -64,6 +66,7 @@ class _HorizontalTabBoxState extends State<_HorizontalTabBox> {
                   bool isSelected = widget.selectedItem == index;
                   bool isLastItem = (index == (widget.itemTitles.length - 1));
                   return Stack(
+                    key: widget.keys[index],
                     children: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 400),
@@ -83,22 +86,55 @@ class _HorizontalTabBoxState extends State<_HorizontalTabBox> {
                                   isSelected ? 10 : 2, isSelected ? 10 : 2)),
                           border: Border(
                             left: BorderSide(
+                              width: 1.5,
                               color: isSelected
                                   ? widget.foregroundColor
                                   : widget.unselectedForegroundColor,
                             ),
                             right: BorderSide(
+                              width: 1.5,
                               color: isSelected
                                   ? widget.foregroundColor
                                   : widget.unselectedForegroundColor,
                             ),
                             top: BorderSide(
+                              width: 1.5,
                               color: isSelected
                                   ? widget.foregroundColor
                                   : widget.unselectedForegroundColor,
                             ),
                             bottom: BorderSide.none,
                           ),
+                          boxShadow: [
+                            if (isSelected)
+                              BoxShadow(
+                                color: widget.foregroundColor.withOpacity(0.1),
+                                offset: const Offset(2, 0),
+                                blurRadius: 5,
+                                spreadRadius: -5,
+                              ),
+                            if (isSelected)
+                              BoxShadow(
+                                color: widget.foregroundColor.withOpacity(0.1),
+                                offset: const Offset(0, 2),
+                                blurRadius: 5,
+                                spreadRadius: -5,
+                              ),
+                            if (isSelected)
+                              BoxShadow(
+                                color: widget.foregroundColor.withOpacity(0.1),
+                                offset: const Offset(-2, 0),
+                                blurRadius: 5,
+                                spreadRadius: -5,
+                              ),
+                            if (isSelected)
+                              BoxShadow(
+                                color: widget.foregroundColor.withOpacity(0.1),
+                                offset: const Offset(0, -2),
+                                blurRadius: 5,
+                                spreadRadius: -5,
+                              ),
+                          ],
                         ),
                         child: Center(
                           child: Column(
@@ -209,18 +245,25 @@ class _CutLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
+      ..color = color.withOpacity(0.80)
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    Paint cutPaint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
     double startPoint = 0;
     double endPoint = totalWidth;
     double cutStartPoint =
-        ((currentIndex * itemWidth) + (currentIndex * spacing)) + 1;
-    double cutEndPoint = (cutStartPoint + itemWidth) - 2;
+        ((currentIndex * itemWidth) + (currentIndex * spacing)) - spacing;
+    double cutEndPoint = (cutStartPoint + itemWidth) + (2 * spacing);
 
     canvas.drawLine(Offset(startPoint, 0), Offset(cutStartPoint, 0), paint);
     canvas.drawLine(Offset(cutEndPoint, 0), Offset(endPoint, 0), paint);
+    canvas.drawLine(Offset(cutStartPoint, 0), Offset(cutEndPoint, 0), cutPaint);
   }
 
   @override
